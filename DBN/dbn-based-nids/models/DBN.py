@@ -187,7 +187,7 @@ class DBN(nn.Module):
             model_mse, model_pl = model.fit(input_data_loader)
 
             # Performs a forward pass over the input_data to get their probabilities
-            input_data, _ = model.sample_hidden(input_data.float())
+            input_data, _ = model.sample_hidden(input_data.float().to(model.device))
 
             # Detaches the variable from the computing graph
             input_data = input_data.detach()

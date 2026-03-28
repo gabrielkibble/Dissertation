@@ -13,24 +13,26 @@ class CICIDSDataset(Dataset):
         Args:
             features_file (string): Path to the csv file with features.
             target_file (string): Path to the csv file with labels.
-            transform (callable, optional): Optional transform to be applied on features.
-            target_transform (callable, optional): Optional transform to be applied on labels.
         """
+        # Store as DataFrames (Original Pandas format)
         self.features = pd.read_pickle(features_file)
         self.labels = pd.read_pickle(target_file)
+        
         self.transform = transform
         self.target_transform = target_transform
 
     def __len__(self):
-        return len(self.labels)
+        return len(self.features)
 
     def __getitem__(self, idx):
-        feature = self.features.iloc[idx, :]
-        label = self.labels.iloc[idx]
-        if self.transform:
-            feature = self.transform(feature.values, dtype=torch.float32)
-        if self.target_transform:
-            label = self.target_transform(label, dtype=torch.int64)
+        # We use .iloc to handle Pandas indexing safely
+        feature = self.features.iloc[idx].values.astype('float32')
+        label = self.labels.iloc[idx].values.astype('long')
+        
+        # Convert to Tensors for the DataLoader
+        feature = torch.tensor(feature)
+        label = torch.tensor(label).squeeze()
+
         return feature, label
 
 

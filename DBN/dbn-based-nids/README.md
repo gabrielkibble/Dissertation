@@ -78,7 +78,8 @@ Once the data is ready to be used, you can train the models using configs files.
         "data_loader": {
             "type": "CICIDS2017DataLoader",                 // selecting data loader
             "args": {
-                "batch_size": 128                           // batch size
+                "batch_size": 128,                           // batch size
+                "balanced": false
             }
         },
         "optimizer": {

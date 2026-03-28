@@ -3,7 +3,7 @@
     "model": {
         "type": "MLP",
         "args": {
-            "num_features": 49,
+            "num_features": 51,
             "hidden1_size": 64,
             "hidden2_size": 64,
             "num_classes": 6
@@ -12,7 +12,7 @@
     "data_loader": {
         "type": "CICIDS2017DataLoader",
         "args": {
-            "batch_size": 64,
+            "batch_size": 512,
             "balanced": false
         }
     },
@@ -31,6 +31,6 @@
         }
     },
     "trainer": {
-        "num_epochs": 10
+        "num_epochs": 1
     }
 }

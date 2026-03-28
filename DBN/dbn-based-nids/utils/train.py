@@ -80,7 +80,9 @@ def train(
         logging.info(f"Epoch {epoch}/{num_epochs}:")
         for inputs, labels in tqdm(train_loader):
             inputs, labels = inputs.to(device), labels.to(device)
-            labels = labels.squeeze(1)
+            # Only squeeze if the labels actually have a second dimension
+            if labels.dim() > 1:
+                labels = labels.squeeze(1)  
 
             # zero the parameter gradients
             for opt in optimizer:
@@ -123,7 +125,8 @@ def train(
         with torch.no_grad():
             for inputs, labels in valid_loader:
                 inputs, labels = inputs.to(device), labels.to(device)
-                labels = labels.squeeze(1)
+                if labels.dim() > 1:
+                    labels = labels.squeeze(1)
 
                 outputs = model(inputs)
 

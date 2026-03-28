@@ -3,14 +3,14 @@
     "model": {
         "type": "DBN",
         "args": {
-            "n_visible": 49,
+            "n_visible": 51,
             "n_hidden": [128, 256, 128, 128, 64],
             "n_classes": 6,
             "learning_rate": [0.1, 0.1, 0.1, 0.1, 0.1],
             "momentum": [0.9, 0.9, 0.9, 0.9, 0.9],
             "decay": [0, 0, 0, 0, 0],
-            "batch_size": [64, 64, 64, 64, 64],
-            "num_epochs": [10, 10, 10, 10, 10],
+            "batch_size": [512, 512, 512, 512, 512],
+            "num_epochs": [1, 1, 1, 1, 1],
             "k": [1, 1, 1, 1, 1]
         }
     },
@@ -36,6 +36,6 @@
         }
     },
     "trainer": {
-        "num_epochs": 3
+        "num_epochs": 1
     }
 }

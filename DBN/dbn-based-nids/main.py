@@ -25,6 +25,7 @@ DATA_DIR  = os.path.join(os.path.abspath('.'), "data")
 IMAGE_DIR = os.path.join(os.path.abspath("."), "images")
 MODEL_DIR = os.path.join(os.path.abspath("."), "checkpoints")
 
+# Define your device
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Ensure that all operations are deterministic for reproducibility, even on GPU (if used)
@@ -35,21 +36,32 @@ torch.backends.cudnn.benchmark = False
 def main(config):
     """Centralised"""
 
-    # Configure logging module
+    # 1. Configure logging
     utils.mkdir(LOG_DIR)
     setup_logging(save_dir=LOG_DIR, log_config=LOG_CONFIG_PATH)
 
     logging.info(f'######## Training the {config["name"]} model ########')
+    
+    # 2. Initialize Model
     model = models.load_model(model_name=config["model"]["type"], params=config["model"]["args"])
-    model.to(DEVICE)
+    
+    # 3. MOVE TO DEVICE HERE
+    model.to(DEVICE) 
 
+    # 4. Handle DBN specific sub-models
+    # If this is a DBN, it has a list of RBMs (model.models). 
+    # We must ensure every sub-model is also on the GPU.
+    if config["model"]["type"] == "DBN":
+        for rbm in model.models:
+            rbm.to(DEVICE)
+            rbm.device = DEVICE
+    
     logging.info("Loading dataset...")
     train_loader, valid_loader, test_loader = dataset.load_data(
         data_path=DATA_DIR,
         balanced=config["data_loader"]["args"]["balanced"],
         batch_size=config["data_loader"]["args"]["batch_size"],
     )
-    logging.info("Dataset loaded!")
 
     criterion = getattr(torch.nn, config["loss"]["type"])(**config["loss"]["args"])
     if config["model"]["type"] == "DBN":

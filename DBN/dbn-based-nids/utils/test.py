@@ -56,7 +56,8 @@ def test(
     with torch.no_grad():
         for (inputs, labels) in tqdm(test_loader):
             inputs, labels = inputs.to(device), labels.to(device)
-            labels = labels.squeeze(1)
+            if labels.dim() > 1:
+                labels = labels.squeeze(1)
 
             outputs = model(inputs)
             
